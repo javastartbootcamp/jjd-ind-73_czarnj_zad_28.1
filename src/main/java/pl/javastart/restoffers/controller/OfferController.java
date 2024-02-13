@@ -8,6 +8,7 @@ import pl.javastart.restoffers.dto.SaveOfferDto;
 import pl.javastart.restoffers.service.OfferService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/offers")
@@ -33,21 +34,19 @@ public class OfferController {
 
     @PostMapping()
     public ResponseEntity<?> saveOffer(@RequestBody SaveOfferDto offer) {
-        ReadOfferDto savedOffer = offerService.saveOffer(offer);
-        if (savedOffer == null) {
+        Optional<ReadOfferDto> savedOffer = offerService.saveOffer(offer);
+        if (savedOffer.isEmpty()) {
             return new ResponseEntity<>(String.format("Nie znaleziono kategorii %s", offer.category()),
                     HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(savedOffer, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedOffer.get(), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReadOfferDto> getOffer(@PathVariable long id) {
-        ReadOfferDto readOffer = offerService.getOffer(id);
-        if (readOffer == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(readOffer, HttpStatus.OK);
+        Optional<ReadOfferDto> readOffer = offerService.getOffer(id);
+        return readOffer.map(offer -> new ResponseEntity<>(offer, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")

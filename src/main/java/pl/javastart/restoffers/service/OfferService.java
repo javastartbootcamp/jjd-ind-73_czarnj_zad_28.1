@@ -43,14 +43,14 @@ public class OfferService {
                 offer.getPrice(), offer.getCategory().getName());
     }
 
-    public ReadOfferDto saveOffer(SaveOfferDto offer) {
+    public Optional<ReadOfferDto> saveOffer(SaveOfferDto offer) {
         Category category = categoryService.findByName(offer.category());
         if (category == null) {
-            return null;
+            return Optional.empty();
         }
         Offer offerToSave = mapToOffer(offer, category);
         offerToSave = offerRepository.save(offerToSave);
-        return mapToReadOfferDto(offerToSave);
+        return Optional.of(mapToReadOfferDto(offerToSave));
     }
 
     private static Offer mapToOffer(SaveOfferDto saveOffer, Category category) {
@@ -63,10 +63,9 @@ public class OfferService {
         return offer;
     }
 
-    public ReadOfferDto getOffer(long id) {
+    public Optional<ReadOfferDto> getOffer(long id) {
         Optional<Offer> offer = offerRepository.findById(id);
-        return offer.map(OfferService::mapToReadOfferDto)
-                .orElse(null);
+        return offer.map(OfferService::mapToReadOfferDto);
     }
 
     public void deleteOffer(long id) {

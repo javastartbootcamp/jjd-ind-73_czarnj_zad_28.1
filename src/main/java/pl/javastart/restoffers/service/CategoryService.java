@@ -1,6 +1,7 @@
 package pl.javastart.restoffers.service;
 
 import org.springframework.stereotype.Service;
+import pl.javastart.restoffers.dto.CategoryIdOnlyDto;
 import pl.javastart.restoffers.dto.ReadCategoryDto;
 import pl.javastart.restoffers.dto.SaveCategoryDto;
 import pl.javastart.restoffers.entity.Category;
@@ -43,10 +44,10 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
-    public Category saveCategory(SaveCategoryDto category) {
+    public CategoryIdOnlyDto saveCategory(SaveCategoryDto category) {
         Category categoryToSave = mapToCategory(category);
         categoryToSave = categoryRepository.save(categoryToSave);
-        return categoryToSave;
+        return new CategoryIdOnlyDto(categoryToSave.getId());
     }
 
     private Category mapToCategory(SaveCategoryDto category) {

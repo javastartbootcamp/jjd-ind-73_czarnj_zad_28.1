@@ -3,9 +3,9 @@ package pl.javastart.restoffers.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.javastart.restoffers.dto.CategoryIdOnlyDto;
 import pl.javastart.restoffers.dto.ReadCategoryDto;
 import pl.javastart.restoffers.dto.SaveCategoryDto;
-import pl.javastart.restoffers.entity.Category;
 import pl.javastart.restoffers.service.CategoryService;
 
 import java.util.List;
@@ -35,8 +35,8 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> saveCategory(@RequestBody SaveCategoryDto category) {
-        Category savedCategory = categoryService.saveCategory(category);
+    public ResponseEntity<CategoryIdOnlyDto> saveCategory(@RequestBody SaveCategoryDto category) {
+        CategoryIdOnlyDto savedCategory = categoryService.saveCategory(category);
         return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
     }
 }
